@@ -14,15 +14,17 @@ typedef struct {
   int num_args;
 } CArgs;
 
-typedef struct CCustomOp{
-  void (*forward)(CArgs* args, CArgs* tensors);
-  void (*backward)(CArgs* args, CArgs* tensors);
-  void (*input_names)(CArgs** names);
-  void (*output_names)(CArgs** names);
-  void (*infer_shape)(CArgs *inputs, CArgs **outputs);
+typedef void* CustomOpHandle;
 
-  void (*init)(struct CCustomOp* self);
-  void (*deleter)(struct CCustomOp* self);
+typedef struct CCustomOp{
+  void (*forward)(CustomOpHandle self, CArgs* args, CArgs* tensors);
+  void (*backward)(CustomOpHandle self, CArgs* args, CArgs* tensors);
+  void (*input_names)(CustomOpHandle self, CArgs** names);
+  void (*output_names)(CustomOpHandle self, CArgs** names);
+  void (*infer_shape)(CustomOpHandle self, CArgs *inputs, CArgs **outputs);
+
+  void (*init)(CustomOpHandle self);
+  void (*deleter)(CustomOpHandle self);
   void* manager_ctx;
 } CCustomOp; 
 
