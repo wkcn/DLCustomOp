@@ -23,7 +23,7 @@ typedef struct CCustomOp{
   void (*output_names)(CustomOpHandle self, CArgs* names);
   void (*infer_shape)(CustomOpHandle self, CArgs* inshapes, CArgs* outshapes);
 
-  CustomOpHandle (*init)();
+  CustomOpHandle (*creator)();
   void (*deleter)(CustomOpHandle self);
 } CCustomOp; 
 

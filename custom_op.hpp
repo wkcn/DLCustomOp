@@ -9,10 +9,25 @@
 #include "c_custom_op.h"
 using namespace std;
 
+class DLTensor;
+
+// The deep learning framework will register some operators, and they obey the definitions of ONNX.
+class ONNX_OP {
+public:
+  void operator()(DLTensor* in, float val, DLTensor* out) {
+    std::cout << "DLTensor += " << val << std::endl;
+  }
+};
+
+// Call some operators in deep learning framework
+ONNX_OP ONNX_CALL(const std::string onnx_op) {
+  return ONNX_OP();
+}
+
 class DLTensor {
 public:
   DLTensor& operator+(float val) {
-    std::cout << "DLTensor += " << val << std::endl;
+    ONNX_CALL("add_scalar")(this, val, this);
     return *this;
   }
 };
@@ -111,7 +126,7 @@ public:
       TArgsManager& ToTArgs = self->ToTArgs;
       self->InferShape(ToTArgs(inshapes), ToTArgs(outshapes));
     };
-    c_op.init = []{return static_cast<void*>(new op_type());};
+    c_op.creator = []{return static_cast<void*>(new op_type());};
     c_op.deleter = [](CustomOpHandle pself) {
       CustomOp* self = static_cast<CustomOp*>(pself);
     }; 
@@ -120,8 +135,6 @@ public:
 
   virtual ~CustomOp() {
   }
-  virtual void Init() {};
-  virtual void Deleter() {};
   virtual void InferShape(TArgs ishapes, TArgs oshapes) = 0;
   virtual void Forward(TArgs args, TArgs tensors) = 0;
   virtual void Backward(TArgs args, TArgs tensors) = 0;

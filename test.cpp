@@ -3,7 +3,7 @@
 class AddScalarOp : public CustomOp {
 public:
   AddScalarOp() {
-    std::cout << "Init AddScalarOp" << std::endl;
+    std::cout << "Create AddScalarOp" << std::endl;
   }
   ~AddScalarOp() {
     std::cout << "Delete AddScalarOp" << std::endl;
@@ -50,7 +50,7 @@ int main() {
   CArgs *inames, *onames;
 
   // Initialize an operator
-  CustomOp* op = static_cast<CustomOp*>(cop.init()); 
+  CustomOp* op = static_cast<CustomOp*>(cop.creator()); 
 
   // IN/OUT Names
   cop.input_names(op, inames);
