@@ -19,13 +19,12 @@ typedef void* CustomOpHandle;
 typedef struct CCustomOp{
   void (*forward)(CustomOpHandle self, CArgs* args, CArgs* tensors);
   void (*backward)(CustomOpHandle self, CArgs* args, CArgs* tensors);
-  void (*input_names)(CustomOpHandle self, CArgs** names);
-  void (*output_names)(CustomOpHandle self, CArgs** names);
-  void (*infer_shape)(CustomOpHandle self, CArgs *inputs, CArgs **outputs);
+  void (*input_names)(CustomOpHandle self, CArgs* names);
+  void (*output_names)(CustomOpHandle self, CArgs* names);
+  void (*infer_shape)(CustomOpHandle self, CArgs* inshapes, CArgs* outshapes);
 
-  void (*init)(CustomOpHandle self);
+  CustomOpHandle (*init)();
   void (*deleter)(CustomOpHandle self);
-  void* manager_ctx;
 } CCustomOp; 
 
 #ifdef __cplusplus
